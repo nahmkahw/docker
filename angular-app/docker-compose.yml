@@ -1,0 +1,10 @@
+version: "2"
+services:
+        angular-app:
+                image: angular
+                command: ng serve --host 0.0.0.0 --port 4200
+                volumes:
+                        - ./myweb:/workspace
+                ports:
+                        - 4200:4200
+                restart: always

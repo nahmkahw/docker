@@ -1,0 +1,38 @@
+version: "2"
+services:
+
+    tomcat:
+      image: tomcat:6.0.45-jre7
+      volumes:
+         - ./src:/usr/local/tomcat/webapps
+         - ./conf/server.xml:/usr/local/tomcat/conf/server.xml
+         - ./conf/tomcat-users.xml:/usr/local/tomcat/conf/tomcat-users.xml
+      ports:
+        - 8087:8080
+      links:
+        - mysql
+      restart: always
+
+    php:
+      image: php-oci8
+      volumes:
+        - ./src:/var/www/html
+        - ./conf/docker-php.ini:/usr/local/etc/php/conf.d/docker-php.ini
+      ports:
+        - 8088:80
+      links:
+        - mysql
+
+    mysql:
+      build: ./build/mysql
+      volumes:
+        - ./build/mysql/my-cron:/etc/cron.d/my-cron
+        - ./tmp/mysql:/var/lib/mysql
+        - ./conf/oracle/tnsnames.ora:/usr/local/instantclient/tnsnames.ora
+        - ./conf/my.cnf:/etc/mysql/my.cnf
+      ports:
+        - 3309:3306
+      restart: always
+      environment:
+        - MYSQL_DATABASE=world
+        - MYSQL_ROOT_PASSWORD=99818864
